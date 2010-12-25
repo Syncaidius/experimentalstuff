@@ -5,13 +5,26 @@
 E2Lib.RegisterExtension("RD3support", true)
 
 RD = nil
+SB = nil
 if CAF then
 	RD = CAF.GetAddon("Resource Distribution")
+	SB = CAF.GetAddon("Spacebuild")
 end
 
 /******************************************************************************/
 --import needed e2 functions
 local validEntity  = E2Lib.validEntity
+
+--other variables
+local SuitMaxCap = 4000
+
+local function IsRDDevice(ent)
+	if ent.Base == "base_rd3_entity" || ent.IsNode || ent.IsPump || ent.IsValve then
+		return true
+	end
+	
+	return false
+end
 
 /*************************************************************/
 
@@ -66,7 +79,7 @@ __e2setcost(1)
 e2function number entity:rdIsDevice()
 	if validEntity(this) then
 		if CAF then
-			if this.Base == "base_rd3_entity" || this.IsNode || this.IsPump || this.IsValve then
+			if IsRDDevice(this) == true then
 				return 1
 			end
 		end
@@ -159,7 +172,7 @@ e2function number entity:rdNetID()
 end
 
 --Lists all of the resources active on the current entity (if any)
-__e2setcost(5)
+__e2setcost(10)
 e2function array entity:rdResourceList()
 	local temp = {}
 	if validEntity(this) then
@@ -193,7 +206,7 @@ end
 
 --Returns all of the entities which are part of the current res net.
 --Only works on resource node entities!
-__e2setcost(10)
+__e2setcost(15)
 e2function array entity:rdNetEntities()
 	local temp = {}
 	if validEntity(this) then
@@ -304,6 +317,211 @@ e2function entity entity:rdPumpConnectedTo()
 					return this.otherpump
 				end
 			end
+		end
+	end
+	
+	return nil
+end
+
+--=======================================
+--ATMOSPHERIC INFO FUNCTIONS
+--=======================================
+--Returns the temperature of the atmosphere the entity is inside
+__e2setcost(1)
+e2function number entity:sbTemperature()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetTemperature(this)
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the percentage of oxygen present in the atmosphere
+__e2setcost(1)
+e2function number entity:sbOxygen()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetO2Percentage()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the percentage of CO2 present in the atmosphere
+__e2setcost(1)
+e2function number entity:sbCO2()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetCO2Percentage()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the percentage of nitrogen present in the atmosphere
+__e2setcost(1)
+e2function number entity:sbNitrogen()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetNPercentage()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the percentage of hydrogen present in the atmosphere
+__e2setcost(1)
+e2function number entity:sbHydrogen()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetHPercentage()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the pressure of the atmosphere
+__e2setcost(1)
+e2function number entity:sbPressure()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetPressure()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the gravity of the atmosphere
+__e2setcost(1)
+e2function number entity:sbGravity()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetGravity()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the percentage of empty air (vacuum) present in the atmosphere
+__e2setcost(1)
+e2function number entity:sbEmptyAir()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetEmptyAirPercentage()
+			end
+		end
+	end
+	
+	return 0
+end
+
+--Returns the pressure of the atmosphere
+__e2setcost(1)
+e2function string entity:sbEnvName()
+	if validEntity(this) then
+		if CAF then
+			if this.environment then
+				return this.environment:GetEnvironmentName()
+			end
+		end
+	end
+	
+	return ""
+end
+
+--Returns an array containing all planet locations
+__e2setcost(15)
+e2function array sbPlanets()
+	local temp = {}
+	if CAF then
+		local planets = SB.GetPlanets()
+		local key = 1
+		if planets then
+			for k,v in pairs(planets) do
+				temp[key] = v:GetPos()
+				key = key + 1
+			end
+		end
+	end
+	
+	return temp
+end
+
+--Returns an array containing all star locations
+__e2setcost(15)
+e2function array sbStars()
+	local temp = {}
+	if CAF then
+		local stars = SB.GetStars()
+		local key = 1
+		if stars then
+			for k,v in pairs(stars) do
+				temp[key] = v:GetPos()
+				key = key + 1
+			end
+		end
+	end
+	
+	return temp
+end
+
+--=======================================
+--SUIT INFO FUNCTIONS
+--=======================================
+
+__e2setcost(1)
+e2function number entity:sbSuitO2()
+	local temp = {}
+	if CAF then
+		if this.suit then
+			return (this.suit.air / SuitMaxCap)*100
+		end
+	end
+	
+	return 0
+end
+
+__e2setcost(1)
+e2function number entity:sbSuitEnergy()
+	local temp = {}
+	if CAF then
+		if this.suit then
+			return (this.suit.energy / SuitMaxCap)*100
+		end
+	end
+	
+	return 0
+end
+
+__e2setcost(1)
+e2function number entity:sbSuitCoolant()
+	local temp = {}
+	if CAF then
+		if this.suit then
+			return (this.suit.coolant / SuitMaxCap)*100
 		end
 	end
 	
