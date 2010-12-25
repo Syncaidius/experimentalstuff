@@ -265,7 +265,9 @@ e2function array entity:rdLinkedNets()
 			if this.IsNode then
 				local nettable = RD.getConnectedNets(this.netid)
 				for k,v in ipairs(nettable) do
-					temp[k] = RD.GetNetTable(v).nodeent
+					if v !=  this.netid then
+						temp[k] = RD.GetNetTable(v).nodeent
+					end
 				end
 			end
 		end
