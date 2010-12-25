@@ -171,9 +171,11 @@ e2function number entity:rdNetID()
 	return 0
 end
 
---Lists all of the resources active on the current entity (if any)
+--Lists all of the resources active on the current entity (if any).
+--Passing 1 to 'proper' ensures all returned names start with a capital letter
+
 __e2setcost(10)
-e2function array entity:rdResourceList()
+e2function array entity:rdResourceList(proper)
 	local temp = {}
 	if validEntity(this) then
 		if CAF then
@@ -181,20 +183,36 @@ e2function array entity:rdResourceList()
 				local nettable = RD.GetNetTable(this.netid)
 				local key = 1
 				if nettable.resources then
-					for k,v in pairs(nettable.resources) do
-						temp[key] = k
-						
-						key = key + 1
+					if proper > 0 then
+						for k,v in pairs(nettable.resources) do
+							temp[key] = RD.GetProperResourceName(k)
+							
+							key = key + 1
+						end
+					else
+						for k,v in pairs(nettable.resources) do
+							temp[key] = k
+							
+							key = key + 1
+						end
 					end
 				end
 			elseif this.Base == "base_rd3_entity" then
 				local enttable = RD.GetEntityTable(this)
 				local key = 1
 				if enttable.resources then
-					for k,v in pairs(enttable.resources) do
-						temp[key] = k
-						
-						key = key + 1
+					if proper > 0 then
+						for k,v in pairs(enttable.resources) do
+							temp[key] = RD.GetProperResourceName(k)
+							
+							key = key + 1
+						end
+					else
+						for k,v in pairs(enttable.resources) do
+							temp[key] = k
+							
+							key = key + 1
+						end
 					end
 				end
 			end

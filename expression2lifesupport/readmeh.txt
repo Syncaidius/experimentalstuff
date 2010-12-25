@@ -20,7 +20,9 @@ E:rdAmount( "resource name" )		- Returns the amount of a resource available
 
 E:rdNetID()				- Returns the ID of the network the entity belongs to
 
-E:rdResourceList()			- Returns an array containing all of the resources that are stored
+E:rdResourceList(capitalize)		- Returns an array containing all of the resources that are stored
+					  Passing a value greater than 0 into the function will capitalize the first
+					  letter of all resources returned (e.g. energy will return as Energy)
 					  or needed in a network. ONLY FULLY WORKS ON RESOURCE NODE ENTITIES!
 
 E:rdNetEntities()			- Returns an array containing all of the entities connected to the
