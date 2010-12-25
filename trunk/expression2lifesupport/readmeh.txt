@@ -12,7 +12,7 @@ E:rdIsNode()   				- Returns 1 if the entity is a resource node
 E:rdIsPump()				- Returns 1 if the entity is a resource pump
 E:rdIsValve()				- Returns 1 if the entity is a resource valve
 E:rdIsDevice()				- Returns 1 if the entity works with resource distribution 3
-E:rdName()				- Returns the name of an RD device (probably works for most other Gmod Entities too)
+
 E:rdCapacity( "resource name" )		- Returns the capacity of an RD entity.
 E:rdNetCapacity( "resource name" ) 	- Returns the capacity of the entire network the entity belongs to 
 
@@ -20,13 +20,14 @@ E:rdAmount( "resource name" )		- Returns the amount of a resource available
 
 E:rdNetID()				- Returns the ID of the network the entity belongs to
 
-E:rdResourceList(capitalize)		- Returns an array containing all of the resources that are stored
-					  Passing a value greater than 0 into the function will capitalize the first
-					  letter of all resources returned (e.g. energy will return as Energy)
-					  or needed in a network. ONLY FULLY WORKS ON RESOURCE NODE ENTITIES!
+E:rdResourceList()			- Returns an array containing all of the resources that are stored
+					  or needed in a network. ONLY WORKS ON A RESOURCE NODE ENTITY!
 
 E:rdNetEntities()			- Returns an array containing all of the entities connected to the
-                                          current entity. ONLY WORKS ON RESOURCE NODE ENTITIES!
+                                          current entity. ONLY WORKS ON A RESOURCE NODE ENTITY!
+
+E:rdLinkedNets()			- returns an array containing all of the node entities linked to the current
+					  network. ONLY WORKS ON A RESOURCE NODE ENTITY!
 
 E:rdPumpSend("resource", amount)	- Sends an amount of resource to another pump, if connected to one (max is 
 					  50 per E2 tick/interval). E must be a pump entity for this to work.
@@ -67,6 +68,6 @@ E:sbSuitO2()				- Returns the oxygen level of a player's suit, if a player entit
 E:sbSuitEnergy()			- Returns the energy level of a player's suit
 E:sbSuitCoolant()			- Returns the coolant level of a player's suit
 
------------------------------
 
-more soon!
+================CREDITS=========================================
+MoSs - for testing the addon on his server: 217.79.182.184:27015
