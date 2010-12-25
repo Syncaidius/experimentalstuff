@@ -171,6 +171,18 @@ e2function number entity:rdNetID()
 	return 0
 end
 
+e2function string entity:rdName()
+	if validEntity(this) then
+		if CAF then
+			if this.PrintName then
+				return this.PrintName
+			end
+		end
+	end
+	
+	return ""
+end
+
 --Lists all of the resources active on the current entity (if any).
 --Passing 1 to 'proper' ensures all returned names start with a capital letter
 
