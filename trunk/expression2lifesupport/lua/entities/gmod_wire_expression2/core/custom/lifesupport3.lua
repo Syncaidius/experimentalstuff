@@ -1,5 +1,5 @@
 /******************************************************************************\
-  RD support v1.00 - By Syncaidius
+  RD support v1.10 - By Syncaidius
 \******************************************************************************/
 
 E2Lib.RegisterExtension("RD3support", true)
@@ -19,7 +19,7 @@ local validEntity  = E2Lib.validEntity
 local SuitMaxCap = 4000
 
 local function IsRDDevice(ent)
-	if ent.Base == "base_rd3_entity" || ent.IsNode || ent.IsPump || ent.IsValve then
+	if ent.Base == "base_rd3_entity" || ent.Base == "base_sb_environment" || ent.IsNode || ent.IsPump || ent.IsValve then
 		return true
 	end
 	
