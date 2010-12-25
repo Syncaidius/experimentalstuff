@@ -12,7 +12,7 @@ E:rdIsNode()   				- Returns 1 if the entity is a resource node
 E:rdIsPump()				- Returns 1 if the entity is a resource pump
 E:rdIsValve()				- Returns 1 if the entity is a resource valve
 E:rdIsDevice()				- Returns 1 if the entity works with resource distribution 3
-
+E:rdName()				- Returns the name of an RD device (probably works for most other Gmod Entities too)
 E:rdCapacity( "resource name" )		- Returns the capacity of an RD entity.
 E:rdNetCapacity( "resource name" ) 	- Returns the capacity of the entire network the entity belongs to 
 
