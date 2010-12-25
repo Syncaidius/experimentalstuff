@@ -255,6 +255,25 @@ e2function array entity:rdNetEntities()
 	return temp
 end
 
+--Returns an array containing other node entities linked to the current network
+--Only works on resource node entities!
+__e2setcost(15)
+e2function array entity:rdLinkedNets()
+	local temp = {}
+	if validEntity(this) then
+		if CAF then
+			if this.IsNode then
+				local nettable = RD.getConnectedNets(this.netid)
+				for k,v in ipairs(nettable) do
+					temp[k] = RD.GetNetTable(v).nodeent
+				end
+			end
+		end
+	end
+	
+	return temp
+end
+
 --=======================================
 --RESOURCE PUMP FUNCTIONS
 --=======================================
@@ -352,6 +371,8 @@ e2function entity entity:rdPumpConnectedTo()
 	
 	return nil
 end
+
+
 
 --=======================================
 --ATMOSPHERIC INFO FUNCTIONS
