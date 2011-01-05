@@ -1,5 +1,5 @@
 /******************************************************************************\
-  RD support v1.10 - By Syncaidius
+  RD support v1.12 - By Syncaidius
 \******************************************************************************/
 
 E2Lib.RegisterExtension("RD3support", true)
@@ -14,6 +14,15 @@ end
 /******************************************************************************/
 --import needed e2 functions
 local validEntity  = E2Lib.validEntity
+local isOwner      = E2Lib.isOwner
+
+registerCallback("e2lib_replace_function", function(funcname, func, oldfunc)
+	if funcname == "isOwner" then 
+		isOwner = func
+	elseif funcname == "validEntity" then
+		validEntity = func
+	end
+end)
 
 --other variables
 local SuitMaxCap = 4000
@@ -27,7 +36,6 @@ local function IsRDDevice(ent)
 end
 
 /*************************************************************/
-
 
 --=======================================
 --GENERAL RESOURCE FUNCTIONS
@@ -100,7 +108,7 @@ end
 
 __e2setcost(2)
 e2function number entity:rdCapacity(string res)
-	if validEntity(this) then
+	if validEntity(this) and isOwner(self,this) == true then
 		if CAF then
 			if this.IsNode then
 				local nettable = RD.GetNetTable(this.netid)
@@ -121,7 +129,7 @@ end
 
 __e2setcost(2)
 e2function number entity:rdNetCapacity(string res)
-	if validEntity(this) then
+	if validEntity(this) and isOwner(self,this) == true then
 		if CAF then
 			if this.IsNode then
 				local nettable = RD.GetNetTable(this.netid)
@@ -139,7 +147,7 @@ end
 
 __e2setcost(2)
 e2function number entity:rdAmount(string res)
-	if validEntity(this) then
+	if validEntity(this) and isOwner(self,this) == true then
 		if CAF then
 			if this.IsNode then
 				local nettable = RD.GetNetTable(this.netid)
@@ -189,7 +197,7 @@ end
 __e2setcost(10)
 e2function array entity:rdResourceList(proper)
 	local temp = {}
-	if validEntity(this) then
+	if validEntity(this) and isOwner(self,this) == true then
 		if CAF then
 			if this.IsNode then
 				local nettable = RD.GetNetTable(this.netid)
@@ -279,28 +287,36 @@ end
 --=======================================
 --RESOURCE PUMP FUNCTIONS
 --=======================================
-__e2setcost(5)
+__e2setcost(15)
 e2function void entity:rdPumpSend(string res, amount)
 	if validEntity(this) then
 		if CAF then
 			if this.IsPump then
 				if this.otherpump then
-					amount = math.Clamp(amount,0,50)
-					this:Send(res,amount)
+					if this:GetPos():Distance(this.otherpump:GetPos()) > 512 then
+						this:Disconnect()
+					else
+						amount = math.Clamp(amount,0,50)
+						this:Send(res,amount)
+					end
 				end
 			end
 		end
 	end
 end
 
-__e2setcost(5)
+__e2setcost(15)
 e2function void entity:rdPumpReceive(string res, amount)
 	if validEntity(this) then
 		if CAF then
 			if this.IsPump then
 				if this.otherpump then
-					amount = math.Clamp(amount,0,50)
-					this.otherpump:Send(res,amount)
+					if this:GetPos():Distance(this.otherpump:GetPos()) > 512 then
+						this:Disconnect()
+					else
+						amount = math.Clamp(amount,0,50)
+						this.otherpump:Send(res,amount)
+					end
 				end
 			end
 		end
@@ -312,8 +328,10 @@ e2function void entity:rdPumpConnect(entity ent)
 	if validEntity(this) then
 		if CAF then
 			if this.IsPump then
-				if this.otherpump == nil then
-					this:Connect(ent)
+				if this.otherpump == nil and ent.IsPump then
+					if this:GetPos():Distance(ent:GetPos()) < 512 then
+						this:Connect(ent)
+					end
 				end
 			end
 		end
@@ -374,7 +392,17 @@ e2function entity entity:rdPumpConnectedTo()
 	return nil
 end
 
-
+e2function number entity:rdHealth()
+	if validEntity(this) then
+		if CAF then
+			if IsRDDevice(this) then
+				return this:Health()
+			end
+		end
+	end
+	
+	return 0
+end
 
 --=======================================
 --ATMOSPHERIC INFO FUNCTIONS
