@@ -293,12 +293,8 @@ e2function void entity:rdPumpSend(string res, amount)
 		if CAF then
 			if this.IsPump then
 				if this.otherpump then
-					if this:GetPos():Distance(this.otherpump:GetPos()) > 512 then
-						this:Disconnect()
-					else
-						amount = math.Clamp(amount,0,50)
-						this:Send(res,amount)
-					end
+					amount = math.Clamp(amount,0,50)
+					this:Send(res,amount)
 				end
 			end
 		end
@@ -311,12 +307,8 @@ e2function void entity:rdPumpReceive(string res, amount)
 		if CAF then
 			if this.IsPump then
 				if this.otherpump then
-					if this:GetPos():Distance(this.otherpump:GetPos()) > 512 then
-						this:Disconnect()
-					else
-						amount = math.Clamp(amount,0,50)
-						this.otherpump:Send(res,amount)
-					end
+					amount = math.Clamp(amount,0,50)
+					this.otherpump:Send(res,amount)
 				end
 			end
 		end
@@ -329,9 +321,7 @@ e2function void entity:rdPumpConnect(entity ent)
 		if CAF then
 			if this.IsPump then
 				if this.otherpump == nil and ent.IsPump then
-					if this:GetPos():Distance(ent:GetPos()) < 512 then
-						this:Connect(ent)
-					end
+					this:Connect(ent)
 				end
 			end
 		end
